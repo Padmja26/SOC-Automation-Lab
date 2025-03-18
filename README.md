@@ -112,4 +112,4 @@ Check the [official installation guide](https://thehive-project.org/).
 
 ---
 
-This **README.md** provides a clear stepwise breakdown of the SOC automation project but for deatiled stepwise configuration refer to Configuration.md. 🚀
+This **README.md** provides a clear stepwise breakdown of the SOC automation project but for deatiled stepwise configuration refer to [Configuration.md](https://github.com/Padmja26/SOC-Automation-Lab/blob/main/Configuration.md). 🚀
