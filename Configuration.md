@@ -67,7 +67,7 @@ Before proceeding with the configuration, ensure you have:
 3. Configure the **ossec.conf** file on Windows 10 to point to the Wazuh Manager.
 4. Restart the Wazuh agent:
    ```powershell
-   Restart-Service Wazuh
+   sudo systemctl restart Wazuh-manager
    ```
 
 ## 6. Add the Sysmon Path to the ossec.conf File in Windows 10
