@@ -16,8 +16,8 @@ Before proceeding with the configuration, ensure you have:
 4. Once imported, start the Wazuh VM.
 5. Login using default credentials:
    ```
-   Username: wazuh
-   Password: wazuh
+   Username: admin
+   Password: admin
    ```
 6. Check if the Wazuh manager is running:
    ```bash
