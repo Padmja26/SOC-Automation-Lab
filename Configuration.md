@@ -6,7 +6,7 @@ Before proceeding with the configuration, ensure you have:
 - **VirtualBox** installed
 - **Wazuh OVA** file
 - **TheHive OVA** file
-- **Windows 10 ISO/VM** for testing
+- **Windows 10 VM** for testing
 - **Sysmon** downloaded for Windows 10
 
 ## 1. Configure Wazuh OVA in VirtualBox
