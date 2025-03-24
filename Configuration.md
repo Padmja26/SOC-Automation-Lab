@@ -130,10 +130,6 @@ Before proceeding with the configuration, ensure you have:
 3. Add a **webhook** to receive alerts from Wazuh Manager.
 4. Use this webhook to automate alerts forwarding and integrations with TheHive.
 
-# Wazuh Integration with Shuffle for SOC Automation
-
-This guide provides step-by-step instructions to integrate Wazuh with Shuffle to automate security operations and incident response workflows.
-
 ## 11. Prerequisites
 
 Ensure you have the following components installed and configured:
