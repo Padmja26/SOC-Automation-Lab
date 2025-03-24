@@ -130,9 +130,151 @@ Before proceeding with the configuration, ensure you have:
 3. Add a **webhook** to receive alerts from Wazuh Manager.
 4. Use this webhook to automate alerts forwarding and integrations with TheHive.
 
-## Next Steps
-- Further integrations with TheHive for SOC automation.
-- Setting up incident response workflows.
+# Wazuh Integration with Shuffle for SOC Automation
+
+This guide provides step-by-step instructions to integrate Wazuh with Shuffle to automate security operations and incident response workflows.
+
+## 11. Prerequisites
+
+Ensure you have the following components installed and configured:
+
+- **Wazuh Manager** (For collecting and analyzing security events)
+- **Shuffle** (For SOAR automation)
+- **TheHive** (For case management and threat intelligence)
+- **VirusTotal API Key** (For automated threat intelligence lookups)
+- **Email Server Details** (For sending notifications)
+
+## 12. Setting Up Webhooks in Wazuh
+
+1. Log in to the Wazuh Manager.
+2. Edit the `/var/ossec/etc/ossec.conf` file and add the following webhook configuration under the `<global>` section:
+
+   ```xml
+   <integration>
+       <name>webhook</name>
+       <hook_url>http://shuffle-instance:8000/hooks/wazuh_alerts</hook_url>
+       <level>10</level>
+   </integration>
+   ```
+
+3. Restart Wazuh for the changes to take effect:
+   ```sh
+   systemctl restart wazuh-manager
+   ```
+
+## 13. Creating a Workflow in Shuffle
+
+1. Log in to Shuffle.
+2. Navigate to **Workflows** and create a new workflow.
+3. Add a **Webhook Trigger**:
+   - Set the trigger URL (e.g., `http://shuffle-instance:8000/hooks/wazuh_alerts`).
+   - Configure it to listen for incoming Wazuh alerts.
+   - Parse the alert JSON to extract relevant information.
+
+## 14. Automating Threat Intelligence with VirusTotal
+
+1. Add the **VirusTotal app** in Shuffle.
+2. Configure it to extract file hashes, IPs, or URLs from Wazuh alerts.
+3. Use the VirusTotal API to check if the entity is malicious.
+4. Store the response in Shuffle for further processing.
+
+## 15. Creating an Incident in TheHive
+
+1. Add **TheHive app** in Shuffle.
+2. Create an action to automatically generate a case in TheHive if an alert meets specific criteria (e.g., high severity, multiple detections).
+3. Map Wazuh alert fields to TheHive case attributes.
+
+## 16. Sending Email Notifications
+
+1. Add the **Email App** in Shuffle.
+2. Configure SMTP settings for outgoing alerts.
+3. Automate email notifications for critical alerts, including threat intelligence results and incident details.
+
+## 17. Testing the Workflow
+
+1. Trigger a test alert in Wazuh (e.g., run `logger "Test Wazuh Alert"`).
+2. Verify that Shuffle receives the webhook.
+3. Check if VirusTotal enriches the data.
+4. Ensure TheHive logs the case correctly.
+5. Confirm that email notifications are sent.
+
+## 18. Configure TheHive for Alert Management
+
+- **Define the Alert Fields:**
+  - PAP (Permissible Actions Protocol): Set exposure level.
+  - Severity: Set as `2` for moderate severity.
+  - Source: Define as Wazuh.
+  - Source Reference: Use Rule ID (e.g., `1002`).
+  - Status: Set as `New`.
+  - Summary: Provide context, e.g., "Mimikatz activity detected on host."
+  - Host Information: Retrieve host details from the alert.
+  - Process ID & Command Line: Extract relevant details.
+  - Tags: Add MITRE ATT&CK mapping (e.g., `T1003 - Credential Dumping`).
+  - Title: Set dynamically, e.g., "Mimikatz Detected".
+  - Traffic Light Protocol (TLP): Set as `2` (Green/Restricted Sharing).
+  - Alert Type: Mark as **Internal**.
+
+- **Save & Deploy Workflow:**
+  - Store the alert configuration in Shuffle.
+
+## 19. Modify Cloud Firewall for TheHive Connectivity
+
+1. Navigate to **DigitalOcean** (or your cloud provider).
+2. Go to **Networking > Firewalls**.
+3. Select your firewall instance.
+4. Create a new rule:
+   - **Port:** `9000`
+   - **Allow IPv4 traffic** from any source (for temporary testing).
+   - **Disable IPv6**.
+   - **Save and apply** the rule.
+
+## 20. Run & Validate TheHive Alert Automation
+
+1. In Shuffle, navigate to the workflow.
+2. Click on **Run Workflow** to execute the alert pipeline.
+3. Open **TheHive** and check if the alert is created with:
+   - **Title:** "Mimikatz Usage Detected"
+   - **Host Information**
+   - **User Information**
+   - **Process ID & Command Line**
+
+## 21. Configure Email Alerting
+
+1. In Shuffle, add the **Email Application** to the workflow.
+2. Connect the **VirusTotal module** (if integrated).
+3. Set recipient email (can be a disposable email from SquareX).
+4. Define email fields:
+   - **Subject:** "Mimikatz Detected - Immediate Attention Required"
+   - **Timestamp (UTC)**
+   - **Affected Host Name**
+   - **Process ID & Command Line**
+5. **Run the Workflow:**
+   - Confirm email receipt with the necessary details.
 
 ---
-This guide will be updated as new configuration steps are added.
+
+# Incident Response Workflow (Automated Blocking)
+
+## 22. Set Up a Virtual Machine for Testing (Ubuntu)
+
+1. Deploy an **Ubuntu VM** (Cloud or On-Prem).
+2. Allow all **TCP connections** to simulate an attack scenario.
+3. Create a firewall rule to allow inbound **SSH connections** for testing.
+
+## 23. Detect SSH Brute Force Attacks & Automate Blocking
+
+1. Add **HTTP Application** in Shuffle.
+2. Define a **GET API Action** with a `curl` request to fetch logs from Wazuh.
+3. Extract **Source IP Addresses** from unauthorized SSH attempts.
+4. Implement **User Input Decision**:
+   - Prompt user: "Do you want to block this IP?"
+   - If "Yes" → Execute block command via **Wazuh API**.
+5. Set up **Wazuh Firewall Rule** to block malicious IPs.
+
+## 24. Validate Incident Response
+
+1. Run a simulated **brute-force attack** on the Ubuntu VM.
+2. Observe if the **automated blocking rule** is applied successfully.
+3. Check logs to verify if **Wazuh blocked the attacking IP**.
+
+
