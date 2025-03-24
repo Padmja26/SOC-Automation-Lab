@@ -247,10 +247,6 @@ Ensure you have the following components installed and configured:
 5. **Run the Workflow:**
    - Confirm email receipt with the necessary details.
 
----
-
-# Incident Response Workflow (Automated Blocking)
-
 ## 22. Set Up a Virtual Machine for Testing (Ubuntu)
 
 1. Deploy an **Ubuntu VM** (Cloud or On-Prem).
