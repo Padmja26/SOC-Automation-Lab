@@ -269,4 +269,6 @@ Ensure you have the following components installed and configured:
 2. Observe if the **automated blocking rule** is applied successfully.
 3. Check logs to verify if **Wazuh blocked the attacking IP**.
 
+---
+Keep checking this repo for more updates and screenshots on this project !!🚀
 
